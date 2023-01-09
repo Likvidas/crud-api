@@ -1,0 +1,12 @@
+{
+  "name": "crud-api",
+  "version": "1.0.0",
+  "description": "This project was carried out as part of the node js course at a RS School",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Likvidas",
+  "license": "ISC"
+}
