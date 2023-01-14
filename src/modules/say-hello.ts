@@ -3,6 +3,9 @@ import * as dotenv from 'dotenv';
 
 dotenv.config();
 
-const PORT = process.env.PORT;
+const { PORT } = process.env;
 
-export const sayHello = () => console.log(`Hello from module. PORT = ${PORT} Your computer has Cores: - ${os.cpus().length}`);
+export const sayHello = () =>
+  console.log(`Hello from module. PORT = ${PORT} Your computer has Cores: - ${os.cpus().length}`);
+
+const muFn = (x: number) => `Hello ${x}`;
