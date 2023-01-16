@@ -69,7 +69,7 @@ export const getUserById = async (req: ClientRequestType, res: ServerResponseTyp
   sendResponse(res, HttpSatatusCode.Ok, currentUser);
 };
 
-export const addUserController = (req: ClientRequestType, res: ServerResponseType) => {
+export const addUserController = async (req: ClientRequestType, res: ServerResponseType) => {
   const bodyRequest: Buffer[] = [];
   let body: User;
 
@@ -117,5 +117,63 @@ export const addUserController = (req: ClientRequestType, res: ServerResponseTyp
 
         sendResponse(res, HttpSatatusCode.Created, newUser);
       }
+    });
+};
+
+export const updateUserController = async (req: ClientRequestType, res: ServerResponseType) => {
+  const id = req.url?.split('/')?.[3] ?? '';
+
+  const isValidId = validate(id) && version(id) === 4;
+
+  if (!isValidId) {
+    sendResponse(res, HttpSatatusCode.BadRequest, 'Your User ID is not valid. Please take valid User ID and try again');
+
+    return;
+  }
+
+  const { data, status } = await readDB();
+
+  if (status === 'error') {
+    sendResponse(res, HttpSatatusCode.InternalServerError, data);
+
+    return;
+  }
+
+  const updatedUser = (data as User[])?.find((user) => user?.id === id);
+
+  if (!updatedUser) {
+    sendResponse(res, HttpSatatusCode.NotFound, 'Information about the updated user was not found');
+
+    return;
+  }
+
+  const userListWithoutUpdatedUser = (data as User[])?.filter((user) => user.id !== updatedUser.id);
+
+  const bodyRequest: Buffer[] = [];
+  let body: User;
+
+  req
+    .on('error', (error) => {
+      console.log(error);
+      sendResponse(
+        res,
+        HttpSatatusCode.InternalServerError,
+        'An error occurred while processing the request body. We are doing everything to fix it.',
+      );
+    })
+    .on('data', (chunk) => bodyRequest.push(chunk))
+    .on('end', async () => {
+      try {
+        body = JSON.parse(Buffer.concat(bodyRequest).toString());
+      } catch (error) {
+        console.log(error);
+        sendResponse(res, HttpSatatusCode.BadRequest, 'An error occurred while processing the JSON file ');
+      }
+
+      const newData: User[] = [...userListWithoutUpdatedUser, { ...updatedUser, ...body }];
+
+      await writeDB(newData);
+
+      sendResponse(res, HttpSatatusCode.Ok, `User with ID: ${id} was updated`);
     });
 };

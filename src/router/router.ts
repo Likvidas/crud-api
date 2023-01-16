@@ -1,4 +1,10 @@
-import { handleInvalidPath, getAllUsersController, getUserById, addUserController } from '../controllers';
+import {
+  handleInvalidPath,
+  getAllUsersController,
+  getUserById,
+  addUserController,
+  updateUserController,
+} from '../controllers';
 import { ServerResponseType, ClientRequestType } from '../controllers';
 import { HttpRequestMethodsType } from './router.types';
 
@@ -26,6 +32,13 @@ export const router: Record<HttpRequestMethodsType, (req: ClientRequestType, res
     }
     handleInvalidPath(res);
   },
-  PUT: () => console.log('You are using PUT request'),
+  PUT: (req, res) => {
+    if (req.url?.includes(`${USERS}/`)) {
+      updateUserController(req, res);
+
+      return;
+    }
+    handleInvalidPath(res);
+  },
   DELETE: () => console.log('You are using DELETE request'),
 };

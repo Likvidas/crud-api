@@ -1,1 +1,12 @@
-[{"id":"0fcdb0d4-cc63-460a-a4b6-e75f2f399030","username":"Kolya","age":"27","hobbies":[]},{"id":"0fcdb0d4-cc63-460a-a4b6-e75f2f399088","username":"Ivan","age":"45","hobbies":["swimming","programming"]},{"username":"Anton","age":"29","hobbies":["computers"],"id":"bb79765d-6210-4af3-be5d-a73644f5f05c"},{"username":"Anton","age":"44","hobbies":["travelling"],"id":"28baeeb7-ab5b-4c28-9ecd-a1aa8f5ccc79"},{"username":"Anna","age":"24","hobbies":["spacing"],"id":"31b0a6c0-9ba4-454e-b247-61816f113cec"}]
+[
+  { "id": "0fcdb0d4-cc63-460a-a4b6-e75f2f399030", "username": "Kolya", "age": "27", "hobbies": [] },
+  {
+    "id": "0fcdb0d4-cc63-460a-a4b6-e75f2f399088",
+    "username": "Ivan",
+    "age": "45",
+    "hobbies": ["swimming", "programming"]
+  },
+  { "username": "Anton", "age": "29", "hobbies": ["computers"], "id": "bb79765d-6210-4af3-be5d-a73644f5f05c" },
+  { "username": "Anna", "age": "24", "hobbies": ["spacing"], "id": "31b0a6c0-9ba4-454e-b247-61816f113cec" },
+  { "username": "Rose", "age": "20", "hobbies": ["travelling"], "id": "28baeeb7-ab5b-4c28-9ecd-a1aa8f5ccc79" }
+]
