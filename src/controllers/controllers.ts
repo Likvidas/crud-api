@@ -2,7 +2,7 @@ import { User } from '../db/db.types';
 import { HttpSatatusCode } from '../server';
 import { ClientRequestType, ServerResponseType } from './controllers.types';
 import { validate, version, v4 as uuidv4 } from 'uuid';
-import { readDB, writeDB } from '../helpers/utils';
+import { readDB, writeDB, checkUserIsValid } from '../helpers/utils';
 
 export const sendResponse = (res: ServerResponseType, statusCode: HttpSatatusCode, body?: User[] | User | string) => {
   const headers = { 'Content-type': typeof body === 'object' ? 'application/json' : 'text/plain' };
@@ -72,11 +72,11 @@ export const addUserController = async (req: ClientRequestType, res: ServerRespo
         sendResponse(res, HttpSatatusCode.BadRequest, 'An error occurred while processing the JSON file ');
       }
 
-      if (!body.username || !body.age || !body.hobbies) {
+      if (!checkUserIsValid(body)) {
         sendResponse(
           res,
           HttpSatatusCode.BadRequest,
-          'The request to add a new user was rejected. The following fields are required: "username": "string", "age": "string", "hobbies": "string[]" ',
+          'The request to add a new user was rejected. The following fields are required: username: string, age: number, hobbies: string[] ',
         );
 
         return;

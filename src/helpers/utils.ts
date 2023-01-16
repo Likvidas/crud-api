@@ -2,6 +2,18 @@ import { readFile, writeFile } from 'fs/promises';
 import { join } from 'path';
 import { User } from '../db/db.types';
 
+export const checkUserIsValid = (user: User) => {
+  if (typeof user.age !== 'number' || typeof user.username !== 'string' || !Array.isArray(user.hobbies)) {
+    return false;
+  }
+
+  if (user.hobbies.some((hobby) => typeof hobby !== 'string')) {
+    return false;
+  }
+
+  return true;
+};
+
 export const readDB = async () => {
   try {
     const data = await readFile(join(__dirname, '../db/db.json'), 'utf8');
