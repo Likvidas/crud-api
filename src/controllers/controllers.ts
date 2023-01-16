@@ -1,27 +1,8 @@
-import { readFile, writeFile } from 'fs/promises';
-import { join } from 'path';
 import { User } from '../db/db.types';
 import { HttpSatatusCode } from '../server';
 import { ClientRequestType, ServerResponseType } from './controllers.types';
 import { validate, version, v4 as uuidv4 } from 'uuid';
-
-const readDB = async () => {
-  try {
-    const data = await readFile(join(__dirname, '../db/db.json'), 'utf8');
-
-    return { data: JSON.parse(data), status: 'ok' };
-  } catch (error) {
-    return { data: 'Something wrong. Our Data Base returned error', status: 'error' };
-  }
-};
-
-const writeDB = async (data: User[]) => {
-  try {
-    await writeFile(join(__dirname, '../db/db.json'), JSON.stringify(data));
-  } catch (error) {
-    console.log(error);
-  }
-};
+import { readDB, writeDB } from '../helpers/utils';
 
 export const sendResponse = (res: ServerResponseType, statusCode: HttpSatatusCode, body?: User[] | User | string) => {
   const headers = { 'Content-type': typeof body === 'object' ? 'application/json' : 'text/plain' };
@@ -170,11 +151,13 @@ export const updateUserController = async (req: ClientRequestType, res: ServerRe
         sendResponse(res, HttpSatatusCode.BadRequest, 'An error occurred while processing the JSON file ');
       }
 
-      const newData: User[] = [...userListWithoutUpdatedUser, { ...updatedUser, ...body }];
+      const newUser = { ...updatedUser, ...body };
+
+      const newData: User[] = [...userListWithoutUpdatedUser, newUser];
 
       await writeDB(newData);
 
-      sendResponse(res, HttpSatatusCode.Ok, `User with ID: ${id} was updated`);
+      sendResponse(res, HttpSatatusCode.Ok, newUser);
     });
 };
 

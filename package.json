@@ -4,8 +4,9 @@
   "description": "This project was carried out as part of the node js course at a RS School",
   "main": "index.js",
   "scripts": {
-    "start:dev": "nodemon",
-    "start:prod": "cross-env NODE_ENV=production webpack && node ./build/bundle.js"
+    "start:dev": "nodemon ./src/index.ts",
+    "start:prod": "cross-env NODE_ENV=production webpack && node ./build/bundle.js",
+    "start:multi": "nodemon ./src/cluster/cluster.ts"
   },
   "keywords": [],
   "author": "Likvidas",

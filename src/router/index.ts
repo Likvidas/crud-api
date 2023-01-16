@@ -1,1 +1,1 @@
-export { router } from './router';
+export { router, USERS_ENDPOINT } from './router';

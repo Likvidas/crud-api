@@ -9,16 +9,16 @@ import {
 import { ServerResponseType, ClientRequestType } from '../controllers';
 import { HttpRequestMethodsType } from './router.types';
 
-const USERS = '/api/users';
+export const USERS_ENDPOINT = '/api/users';
 
 export const router: Record<HttpRequestMethodsType, (req: ClientRequestType, res: ServerResponseType) => void> = {
   GET: (req, res) => {
-    if (req.url === USERS) {
+    if (req.url === USERS_ENDPOINT) {
       getAllUsersController(res);
 
       return;
     }
-    if (req.url?.includes(`${USERS}/`)) {
+    if (req.url?.includes(`${USERS_ENDPOINT}/`)) {
       getUserById(req, res);
 
       return;
@@ -26,7 +26,7 @@ export const router: Record<HttpRequestMethodsType, (req: ClientRequestType, res
     handleInvalidPath(res);
   },
   POST: (req, res) => {
-    if (req.url === USERS) {
+    if (req.url === USERS_ENDPOINT) {
       addUserController(req, res);
 
       return;
@@ -34,7 +34,7 @@ export const router: Record<HttpRequestMethodsType, (req: ClientRequestType, res
     handleInvalidPath(res);
   },
   PUT: (req, res) => {
-    if (req.url?.includes(`${USERS}/`)) {
+    if (req.url?.includes(`${USERS_ENDPOINT}/`)) {
       updateUserController(req, res);
 
       return;
@@ -42,7 +42,7 @@ export const router: Record<HttpRequestMethodsType, (req: ClientRequestType, res
     handleInvalidPath(res);
   },
   DELETE: (req, res) => {
-    if (req.url?.includes(`${USERS}/`)) {
+    if (req.url?.includes(`${USERS_ENDPOINT}/`)) {
       deleteUserController(req, res);
 
       return;
