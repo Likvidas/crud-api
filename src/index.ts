@@ -1,5 +1,3 @@
-import { sayHello } from './modules/say-hello';
+import { initServer } from './server/server';
 
-console.log('Hello my Dear friend!!! Cu Cu');
-
-sayHello();
+initServer();

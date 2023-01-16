@@ -1,6 +1,5 @@
 import * as path from 'path';
 import { Configuration } from 'webpack';
-const NodemonPlugin = require('nodemon-webpack-plugin');
 
 const isDevMode = process.env.NODE_ENV === 'development';
 const mode = isDevMode ? 'development' : 'production';
@@ -26,7 +25,6 @@ const config: Configuration = {
   resolve: {
     extensions: ['.ts', '.js'],
   },
-  plugins: [new NodemonPlugin()],
 };
 
 export default config;

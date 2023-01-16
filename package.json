@@ -4,8 +4,8 @@
   "description": "This project was carried out as part of the node js course at a RS School",
   "main": "index.js",
   "scripts": {
-    "start:dev": "cross-env NODE_ENV=development webpack --watch",
-    "start:prod": "cross-env NODE_ENV=production webpack"
+    "start:dev": "nodemon",
+    "start:prod": "cross-env NODE_ENV=production webpack && node ./build/bundle.js"
   },
   "keywords": [],
   "author": "Likvidas",
@@ -17,7 +17,7 @@
     "@typescript-eslint/parser": "^5.48.1",
     "eslint": "^8.31.0",
     "eslint-config-prettier": "^8.6.0",
-    "nodemon-webpack-plugin": "^4.8.1",
+    "nodemon": "^2.0.20",
     "prettier": "^2.8.3",
     "ts-loader": "^9.4.2",
     "ts-node": "^10.9.1",
