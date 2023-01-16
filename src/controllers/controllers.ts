@@ -177,3 +177,37 @@ export const updateUserController = async (req: ClientRequestType, res: ServerRe
       sendResponse(res, HttpSatatusCode.Ok, `User with ID: ${id} was updated`);
     });
 };
+
+export const deleteUserController = async (req: ClientRequestType, res: ServerResponseType) => {
+  const id = req.url?.split('/')?.[3] ?? '';
+
+  const isValidId = validate(id) && version(id) === 4;
+
+  if (!isValidId) {
+    sendResponse(res, HttpSatatusCode.BadRequest, 'Your User ID is not valid. Please take valid User ID and try again');
+
+    return;
+  }
+
+  const { data, status } = await readDB();
+
+  if (status === 'error') {
+    sendResponse(res, HttpSatatusCode.InternalServerError, data);
+
+    return;
+  }
+
+  const deletedUser = (data as User[])?.find((user) => user?.id === id);
+
+  if (!deletedUser) {
+    sendResponse(res, HttpSatatusCode.NotFound, 'Information about the deleted user was not found');
+
+    return;
+  }
+
+  const userListWithoutDeletedUser = (data as User[])?.filter((user) => user.id !== deletedUser.id);
+
+  await writeDB(userListWithoutDeletedUser);
+
+  sendResponse(res, HttpSatatusCode.NoContent, '');
+};

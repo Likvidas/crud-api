@@ -1,7 +1,8 @@
 export {
+  addUserController,
+  deleteUserController,
   getAllUsersController,
   getUserById,
-  addUserController,
   handleInvalidPath,
   sendResponse,
   updateUserController,

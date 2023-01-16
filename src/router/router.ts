@@ -4,6 +4,7 @@ import {
   getUserById,
   addUserController,
   updateUserController,
+  deleteUserController,
 } from '../controllers';
 import { ServerResponseType, ClientRequestType } from '../controllers';
 import { HttpRequestMethodsType } from './router.types';
@@ -40,5 +41,12 @@ export const router: Record<HttpRequestMethodsType, (req: ClientRequestType, res
     }
     handleInvalidPath(res);
   },
-  DELETE: () => console.log('You are using DELETE request'),
+  DELETE: (req, res) => {
+    if (req.url?.includes(`${USERS}/`)) {
+      deleteUserController(req, res);
+
+      return;
+    }
+    handleInvalidPath(res);
+  },
 };
