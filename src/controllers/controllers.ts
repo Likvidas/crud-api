@@ -1,9 +1,9 @@
-import { readFile } from 'fs/promises';
+import { readFile, writeFile } from 'fs/promises';
 import { join } from 'path';
 import { User } from '../db/db.types';
 import { HttpSatatusCode } from '../server';
 import { ClientRequestType, ServerResponseType } from './controllers.types';
-import { validate, version } from 'uuid';
+import { validate, version, v4 as uuidv4 } from 'uuid';
 
 const readDB = async () => {
   try {
@@ -15,10 +15,22 @@ const readDB = async () => {
   }
 };
 
-const sendResponse = (res: ServerResponseType, statusCode: HttpSatatusCode, body?: User[] | User | string) => {
+const writeDB = async (data: User[]) => {
+  try {
+    await writeFile(join(__dirname, '../db/db.json'), JSON.stringify(data));
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const sendResponse = (res: ServerResponseType, statusCode: HttpSatatusCode, body?: User[] | User | string) => {
   const headers = { 'Content-type': typeof body === 'object' ? 'application/json' : 'text/plain' };
   res.writeHead(statusCode, headers);
   res.end(body ? JSON.stringify(body) : '');
+};
+
+export const handleInvalidPath = (res: ServerResponseType) => {
+  sendResponse(res, HttpSatatusCode.NotFound, 'Ooops!!! Page not found');
 };
 
 export const getAllUsersController = async (res: ServerResponseType) => {
@@ -55,4 +67,55 @@ export const getUserById = async (req: ClientRequestType, res: ServerResponseTyp
   }
 
   sendResponse(res, HttpSatatusCode.Ok, currentUser);
+};
+
+export const addUserController = (req: ClientRequestType, res: ServerResponseType) => {
+  const bodyRequest: Buffer[] = [];
+  let body: User;
+
+  req
+    .on('error', (error) => {
+      console.log(error);
+      sendResponse(
+        res,
+        HttpSatatusCode.InternalServerError,
+        'An error occurred while processing the request body. We are doing everything to fix it.',
+      );
+    })
+    .on('data', (chunk) => bodyRequest.push(chunk))
+    .on('end', async () => {
+      try {
+        body = JSON.parse(Buffer.concat(bodyRequest).toString());
+      } catch (error) {
+        console.log(error);
+        sendResponse(res, HttpSatatusCode.BadRequest, 'An error occurred while processing the JSON file ');
+      }
+
+      if (!body.username || !body.age || !body.hobbies) {
+        sendResponse(
+          res,
+          HttpSatatusCode.BadRequest,
+          'The request to add a new user was rejected. The following fields are required: "username": "string", "age": "string", "hobbies": "string[]" ',
+        );
+
+        return;
+      } else {
+        const id = uuidv4();
+        const { data, status } = await readDB();
+
+        if (status === 'error') {
+          sendResponse(res, HttpSatatusCode.InternalServerError, data);
+
+          return;
+        }
+
+        const newUser = { ...body, id };
+
+        const newData: User[] = [...data, newUser];
+
+        await writeDB(newData);
+
+        sendResponse(res, HttpSatatusCode.Created, newUser);
+      }
+    });
 };

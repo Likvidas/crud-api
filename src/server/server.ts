@@ -3,6 +3,8 @@ import { env } from 'process';
 import { config } from 'dotenv';
 import { router } from '../router';
 import { HttpRequestMethodsType } from '../router/router.types';
+import { sendResponse } from '../controllers';
+import { HttpSatatusCode } from './server.types';
 
 config();
 
@@ -16,7 +18,11 @@ export const initServer = () => {
     if (method) {
       router[method as HttpRequestMethodsType]
         ? router[method as HttpRequestMethodsType](request, response)
-        : console.log(`This method - ${method} is not supported our application`);
+        : sendResponse(
+            response,
+            HttpSatatusCode.NotImplemented,
+            `This method - ${method} is not supported our application`,
+          );
     }
   });
 
