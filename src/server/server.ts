@@ -1,11 +1,10 @@
 import { createServer } from 'http';
-import { env, stdout } from 'process';
-import * as dotenv from 'dotenv';
-import { HttpSatatusCode } from '.';
+import { env } from 'process';
+import { config } from 'dotenv';
 import { router } from '../router';
-import { HttpRequestMethodsType } from 'src/router/router.types';
+import { HttpRequestMethodsType } from '../router/router.types';
 
-dotenv.config();
+config();
 
 export const initServer = () => {
   const port = Number(env.PORT) ?? 6060;
@@ -17,13 +16,11 @@ export const initServer = () => {
     if (method) {
       router[method as HttpRequestMethodsType]
         ? router[method as HttpRequestMethodsType](request, response)
-        : console.log(`\nThis method - ${method} is not supported our application`);
+        : console.log(`This method - ${method} is not supported our application`);
     }
-    response.writeHead(HttpSatatusCode.Ok, { 'Content-type': 'text/plain' });
-    response.end('Hello from server');
   });
 
   server.listen(port, hostName, () => {
-    stdout.write(`Server started at http://${hostName}:${port}`);
+    console.log(`Server started at http://${hostName}:${port}`);
   });
 };
