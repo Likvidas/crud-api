@@ -55,7 +55,7 @@ To create a new user, you can use this example for the request body:
 ```shell
 {
   "username": "Anna"
-  "age": "22",
+  "age": 22,
   "hobbies": ["fashion", "IT"],
 }
 ```
